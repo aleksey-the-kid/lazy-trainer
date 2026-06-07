@@ -41,20 +41,19 @@ export function WeightChart({ entries }: WeightChartProps) {
   const yMax = maxWeight + weightSpan * 0.15
   const yRange = yMax - yMin
 
-  const points = entries.map((entry, index) => {
+  const barWidth = Math.min(28, (plotWidth / entries.length) * 0.65)
+  const gap = entries.length > 1 ? plotWidth / (entries.length - 1) : 0
+
+  const bars = entries.map((entry, index) => {
     const x =
       entries.length === 1
         ? PADDING.left + plotWidth / 2
-        : PADDING.left + (index / (entries.length - 1)) * plotWidth
-    const y =
-      PADDING.top + plotHeight - ((entry.weightKg - yMin) / yRange) * plotHeight
+        : PADDING.left + index * gap
+    const barHeight = ((entry.weightKg - yMin) / yRange) * plotHeight
+    const y = PADDING.top + plotHeight - barHeight
 
-    return { ...entry, x, y }
+    return { ...entry, x, y, barHeight, barWidth }
   })
-
-  const linePath = points
-    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
-    .join(' ')
 
   const yTicks = [yMin, yMin + yRange / 2, yMax]
   const xLabelIndices =
@@ -70,8 +69,7 @@ export function WeightChart({ entries }: WeightChartProps) {
       aria-hidden
     >
       {yTicks.map((tick) => {
-        const y =
-          PADDING.top + plotHeight - ((tick - yMin) / yRange) * plotHeight
+        const y = PADDING.top + plotHeight - ((tick - yMin) / yRange) * plotHeight
 
         return (
           <g key={tick}>
@@ -80,7 +78,7 @@ export function WeightChart({ entries }: WeightChartProps) {
               y1={y}
               x2={CHART_WIDTH - PADDING.right}
               y2={y}
-              className="stroke-border/60"
+              className="stroke-border/50"
               strokeDasharray="4 4"
               strokeWidth={1}
             />
@@ -96,40 +94,38 @@ export function WeightChart({ entries }: WeightChartProps) {
         )
       })}
 
-      {points.length > 1 && (
-        <path
-          d={linePath}
-          fill="none"
-          className="stroke-primary"
-          strokeWidth={2.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      )}
-
-      {points.map((point) => (
-        <g key={point.id}>
+      {bars.map((bar, index) => (
+        <g key={bar.id}>
+          <rect
+            x={bar.x - bar.barWidth / 2}
+            y={bar.y}
+            width={bar.barWidth}
+            height={bar.barHeight}
+            rx={bar.barWidth / 2}
+            fill={index % 2 === 0 ? 'var(--chart-1)' : 'var(--chart-2)'}
+            opacity={0.9}
+          />
           <circle
-            cx={point.x}
-            cy={point.y}
-            r={5}
-            className="fill-primary stroke-background"
-            strokeWidth={2}
+            cx={bar.x}
+            cy={bar.y}
+            r={4}
+            fill="var(--foreground)"
+            opacity={0.85}
           />
         </g>
       ))}
 
       {xLabelIndices.map((index) => {
-        const point = points[index]
+        const bar = bars[index]
         return (
           <text
-            key={point.id}
-            x={point.x}
+            key={bar.id}
+            x={bar.x}
             y={CHART_HEIGHT - 8}
             textAnchor="middle"
             className="fill-muted-foreground text-[9px]"
           >
-            {formatDate(point.date, language)}
+            {formatDate(bar.date, language)}
           </text>
         )
       })}

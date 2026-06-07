@@ -1,0 +1,34 @@
+schema: spec-driven
+
+context: |
+  Lazy Trainer — offline-first React 19 PWA (v0.0.9) for workout tracking.
+  Deployed to GitHub Pages at /lazy-trainer/.
+
+  Stack: Vite 8, TypeScript, Tailwind CSS 4, Dexie 4 (IndexedDB v12), Google OAuth, optional Supabase mirror.
+  No React Router, no global state library, no test runner.
+
+  UI: warm light theme, orange primary, glassmorphism, floating pill bottom nav, photo hero cards.
+  Design tokens in src/index.css; imagery in public/images/ui/.
+
+  Architecture:
+  - Navigation: state-based AppPage in src/App.tsx (profile | workouts | settings | console)
+  - Primary nav: AppBottomNav; sign-out in Settings
+  - Data: src/lib/* service modules read/write IndexedDB; mirror*() to Supabase fire-and-forget
+  - Types: co-located in src/db/index.ts
+  - i18n: en/ru via src/i18n/, default ru, stored in db.settings
+  - Auth: client-side Google JWT decode, user id = sub
+
+  Key paths:
+  - src/App.tsx — auth gate + routing
+  - src/db/index.ts — Dexie schema (source of truth for local DB)
+  - src/lib/supabase/sync.ts — cloud mirror
+  - supabase/schema.sql — PostgreSQL bootstrap (new DDL → db/migrations/)
+
+  Conventions:
+  - @/ path alias for src/
+  - Domain logic in lib/, not components
+  - Do NOT bump version/changelog unless user asks (src/version.ts, src/changelog.ts)
+  - PostgreSQL schema changes → db/migrations/*.sql, not schema.sql directly
+  - IndexedDB changes → Dexie version bump in src/db/index.ts
+
+  Docs: docs/PROJECT_CONTEXT.md, docs/DATA_MODEL.md, docs/DEVELOPER_WORKFLOW.md

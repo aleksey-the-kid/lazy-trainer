@@ -1,0 +1,30 @@
+---
+description: Database schema changes via SQL migrations in db/migrations
+globs: supabase/**,db/**,src/db/**
+alwaysApply: false
+---
+
+# Database migrations
+
+When changing the **Supabase / PostgreSQL** schema, do **not** edit `supabase/schema.sql` directly and do **not** apply DDL inline in app code or docs.
+
+Instead, add a new SQL migration file in `db/migrations/`.
+
+## Workflow
+
+1. Create a new file: `db/migrations/YYYYMMDDHHMMSS_short_description.sql`
+2. Put all DDL there (`ALTER TABLE`, `CREATE TABLE`, indexes, RLS policies, etc.).
+3. Update TypeScript types and sync code in `src/` to match the new schema.
+4. Mention the migration file in the PR / change description so it can be run in Supabase SQL Editor.
+
+## Example
+
+```sql
+-- db/migrations/20260607120000_add_notes_to_workout_sessions.sql
+alter table workout_sessions
+  add column if not exists notes text;
+```
+
+## IndexedDB (Dexie)
+
+Local IndexedDB schema still uses Dexie version bumps in `src/db/index.ts`. That is separate from PostgreSQL migrations.

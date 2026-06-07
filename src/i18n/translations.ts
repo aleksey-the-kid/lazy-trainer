@@ -115,6 +115,7 @@ export type TranslationKey =
   | 'workouts.historyNote'
   | 'settings.title'
   | 'settings.language'
+  | 'settings.account'
   | 'settings.languageEn'
   | 'settings.languageRu'
   | 'settings.workoutData'
@@ -154,6 +155,7 @@ export type TranslationKey =
   | 'console.copySuccess'
   | 'console.count'
   | 'common.loading'
+  | 'common.welcomeBack'
   | `activity.${ActivityLevel}`
   | `workouts.equipment.${CardioEquipment}`
 
@@ -279,6 +281,7 @@ const en: Record<TranslationKey, string> = {
   'workouts.equipment.elliptical': 'Elliptical',
   'settings.title': 'Settings',
   'settings.language': 'Language',
+  'settings.account': 'Account',
   'settings.languageEn': 'English',
   'settings.languageRu': 'Russian',
   'settings.workoutData': 'Workout data',
@@ -320,6 +323,7 @@ const en: Record<TranslationKey, string> = {
   'console.copySuccess': 'Copied',
   'console.count': '{count} entries',
   'common.loading': 'Loading...',
+  'common.welcomeBack': 'Welcome back',
   'activity.sedentary': 'Sedentary (×1.2)',
   'activity.light': 'Light activity (×1.375)',
   'activity.moderate': 'Moderate activity (×1.55)',
@@ -449,6 +453,7 @@ const ru: Record<TranslationKey, string> = {
   'workouts.equipment.elliptical': 'Эллипс',
   'settings.title': 'Настройки',
   'settings.language': 'Язык',
+  'settings.account': 'Аккаунт',
   'settings.languageEn': 'English',
   'settings.languageRu': 'Русский',
   'settings.workoutData': 'Данные тренировок',
@@ -490,6 +495,7 @@ const ru: Record<TranslationKey, string> = {
   'console.copySuccess': 'Скопировано',
   'console.count': '{count} записей',
   'common.loading': 'Загрузка...',
+  'common.welcomeBack': 'С возвращением',
   'activity.sedentary': 'Сидячий образ жизни (×1.2)',
   'activity.light': 'Лёгкая активность (×1.375)',
   'activity.moderate': 'Умеренная активность (×1.55)',

@@ -105,7 +105,10 @@ npm run lint     # ESLint
 
 ### Docs
 
-- [Workout data model](docs/DATABASE_WORKOUTS.md) — IndexedDB schema and import format
+- [Project context](docs/PROJECT_CONTEXT.md) — architecture, navigation, features
+- [Data model](docs/DATA_MODEL.md) — IndexedDB + Supabase storage and sync
+- [Developer workflow](docs/DEVELOPER_WORKFLOW.md) — setup, env, deploy, OpenSpec
+- [Workout data model](docs/DATABASE_WORKOUTS.md) — import/export JSON format
 - [Deploy to GitHub Pages](docs/GITHUB_PAGES.md) — CI deploy and production URL
 - [Supabase schema](supabase/schema.sql) — cloud backup tables
 

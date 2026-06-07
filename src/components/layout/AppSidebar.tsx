@@ -18,7 +18,7 @@ import {
 import { useI18n } from '@/i18n/context'
 import { cn } from '@/lib/utils'
 
-export type AppPage = 'profile' | 'workouts' | 'settings' | 'console'
+import type { AppPage } from '@/components/layout/app-page'
 
 interface AppSidebarProps {
   open: boolean

@@ -358,21 +358,12 @@ export function ActiveWorkoutView({
 
   return (
     <>
-      <div className="space-y-4">
-        <WorkoutOverlayHeader title={session.templateName} onBack={onBack} />
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pb-4">
+          <WorkoutOverlayHeader title={session.templateName} onBack={onBack} />
 
-        <div className="sport-card-accent p-4">
-          <p className="text-xs font-medium tracking-widest text-primary uppercase">
-            {t('workouts.active')}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {completedSets}/{totalSets} · {t('workouts.totalVolume')}: {currentVolume}{' '}
-            {t('profile.weightUnit')}
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          {session.exercises.map((exercise, index) => (
+          <div className="space-y-3">
+            {session.exercises.map((exercise, index) => (
             <div key={exercise.id} className="sport-card p-4">
               <p className="mb-3 font-medium">
                 {index + 1}. {exercise.name}
@@ -472,16 +463,34 @@ export function ActiveWorkoutView({
                 ))}
               </div>
             </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <Button
-          className="w-full"
-          onClick={handleComplete}
-          disabled={completing}
-        >
-          {t('workouts.complete')}
-        </Button>
+        <div className="surface-dark-panel -mx-4 shrink-0 space-y-4 px-4 pt-5 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-white/10 p-3">
+              <p className="text-xs text-white/60 uppercase tracking-wide">{t('workouts.active')}</p>
+              <p className="mt-1 text-2xl font-bold">
+                {completedSets}/{totalSets}
+              </p>
+              <p className="text-xs text-white/60">{t('workouts.set')}</p>
+            </div>
+            <div className="rounded-2xl bg-primary/90 p-3">
+              <p className="text-xs text-primary-foreground/80 uppercase tracking-wide">
+                {t('workouts.totalVolume')}
+              </p>
+              <p className="mt-1 text-2xl font-bold text-primary-foreground">
+                {currentVolume}
+              </p>
+              <p className="text-xs text-primary-foreground/80">{t('profile.weightUnit')}</p>
+            </div>
+          </div>
+
+          <Button className="w-full" onClick={handleComplete} disabled={completing}>
+            {t('workouts.complete')}
+          </Button>
+        </div>
       </div>
 
       {failureSheet}

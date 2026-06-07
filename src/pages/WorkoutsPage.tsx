@@ -18,6 +18,7 @@ import {
   startWorkout,
 } from '@/lib/workout-sessions'
 import { getTemplate, getTemplates } from '@/lib/workout-templates'
+import { cn } from '@/lib/utils'
 
 export type WorkoutsTab = 'templates' | 'exercises' | 'history'
 
@@ -106,7 +107,12 @@ export function WorkoutsPage({ user }: WorkoutsPageProps) {
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
-      <div className="min-h-0 flex-1 overflow-y-auto pb-2">
+      <div
+        className={cn(
+          'min-h-0 flex-1',
+          overlay.type === 'active' ? 'flex flex-col overflow-hidden' : 'overflow-y-auto pb-2',
+        )}
+      >
         {overlay.type === 'detail' && selectedTemplate && (
           <WorkoutDetailView
             template={selectedTemplate}
@@ -175,7 +181,7 @@ export function WorkoutsPage({ user }: WorkoutsPageProps) {
       {showChrome && activeTab === 'templates' && (
         <Button
           size="icon-lg"
-          className="absolute right-0 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-20 size-14 rounded-full shadow-[0_0_24px_-4px_var(--primary)]"
+          className="absolute right-0 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-20 size-14 rounded-full shadow-[0_8px_24px_-4px_oklch(0.68_0.19_45_/_0.55)]"
           onClick={() => {
             setEditingTemplate(undefined)
             setBuilderOpen(true)
@@ -188,6 +194,7 @@ export function WorkoutsPage({ user }: WorkoutsPageProps) {
 
       {showChrome && (
         <BottomTabBar
+          variant="pills"
           tabs={[
             { id: 'templates' as const, label: t('workouts.tabTemplates'), icon: List },
             {

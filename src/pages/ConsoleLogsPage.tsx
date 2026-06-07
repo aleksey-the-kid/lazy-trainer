@@ -1,4 +1,4 @@
-import { Check, Copy, Trash2 } from 'lucide-react'
+import { ArrowLeft, Check, Copy, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -14,16 +14,16 @@ import { cn } from '@/lib/utils'
 
 const levelStyles: Record<ConsoleLogLevel, string> = {
   log: 'text-foreground',
-  info: 'text-sky-400',
-  warn: 'text-amber-400',
+  info: 'text-sky-600',
+  warn: 'text-amber-600',
   error: 'text-destructive',
   debug: 'text-muted-foreground',
 }
 
 const levelBadgeStyles: Record<ConsoleLogLevel, string> = {
   log: 'bg-secondary text-secondary-foreground',
-  info: 'bg-sky-500/15 text-sky-400',
-  warn: 'bg-amber-500/15 text-amber-400',
+  info: 'bg-sky-500/15 text-sky-600',
+  warn: 'bg-amber-500/15 text-amber-600',
   error: 'bg-destructive/15 text-destructive',
   debug: 'bg-muted text-muted-foreground',
 }
@@ -42,7 +42,7 @@ function LogRow({ entry, language }: { entry: ConsoleLogEntry; language: 'en' | 
         <span className="text-muted-foreground">{time}</span>
         <span
           className={cn(
-            'rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase',
+            'rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase',
             levelBadgeStyles[entry.level],
           )}
         >
@@ -61,7 +61,11 @@ function LogRow({ entry, language }: { entry: ConsoleLogEntry; language: 'en' | 
   )
 }
 
-export function ConsoleLogsPage() {
+interface ConsoleLogsPageProps {
+  onBack: () => void
+}
+
+export function ConsoleLogsPage({ onBack }: ConsoleLogsPageProps) {
   const { t, language } = useI18n()
   const logs = useConsoleLogs()
   const listRef = useRef<HTMLDivElement>(null)
@@ -97,6 +101,13 @@ export function ConsoleLogsPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="icon" onClick={onBack} aria-label="Back">
+          <ArrowLeft className="size-5" />
+        </Button>
+        <h2 className="text-lg font-bold">{t('console.title')}</h2>
+      </div>
+
       <div className="flex shrink-0 gap-2">
         <Button
           variant="outline"
@@ -122,18 +133,11 @@ export function ConsoleLogsPage() {
 
       <p className="shrink-0 text-xs text-muted-foreground">{t('console.hint')}</p>
 
-      <div
-        ref={listRef}
-        className="sport-card min-h-0 flex-1 overflow-y-auto bg-black/20"
-      >
+      <div ref={listRef} className="sport-card min-h-0 flex-1 overflow-y-auto bg-secondary/30">
         {logs.length === 0 ? (
-          <p className="p-6 text-center text-sm text-muted-foreground">
-            {t('console.empty')}
-          </p>
+          <p className="p-6 text-center text-sm text-muted-foreground">{t('console.empty')}</p>
         ) : (
-          logs.map((entry) => (
-            <LogRow key={entry.id} entry={entry} language={language} />
-          ))
+          logs.map((entry) => <LogRow key={entry.id} entry={entry} language={language} />)
         )}
       </div>
 

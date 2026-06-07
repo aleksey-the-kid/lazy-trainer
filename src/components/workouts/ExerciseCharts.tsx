@@ -225,7 +225,7 @@ export function ExerciseCharts({
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-3 gap-2">
-        <div className="sport-card-accent rounded-xl px-3 py-2.5 text-center">
+        <div className="sport-card-stat text-center">
           <p className="text-[10px] tracking-wide text-muted-foreground uppercase">
             {labels.prWeight}
           </p>
@@ -234,7 +234,7 @@ export function ExerciseCharts({
           </p>
           <p className="text-[10px] text-muted-foreground">{weightUnit}</p>
         </div>
-        <div className="sport-card rounded-xl px-3 py-2.5 text-center">
+        <div className="sport-card-stat text-center">
           <p className="text-[10px] tracking-wide text-muted-foreground uppercase">
             {labels.prVolume}
           </p>
@@ -243,7 +243,7 @@ export function ExerciseCharts({
           </p>
           <p className="text-[10px] text-muted-foreground">{weightUnit}</p>
         </div>
-        <div className="sport-card rounded-xl px-3 py-2.5 text-center">
+        <div className="sport-card-stat text-center">
           <p className="text-[10px] tracking-wide text-muted-foreground uppercase">
             {labels.sessions}
           </p>

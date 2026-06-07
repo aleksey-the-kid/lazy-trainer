@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { AppLayout } from '@/components/layout/AppLayout'
-import type { AppPage } from '@/components/layout/AppSidebar'
+import type { AppPage } from '@/components/layout/app-page'
 import { useI18n } from '@/i18n/context'
 import { AppUpdateProvider } from '@/lib/app-update'
 import type { User } from '@/db'
@@ -65,12 +65,13 @@ function App() {
         user={user}
         currentPage={page}
         onNavigate={setPage}
-        onSignOut={handleLogout}
       >
         {page === 'profile' && <ProfilePage user={user} />}
         {page === 'workouts' && <WorkoutsPage user={user} />}
-        {page === 'settings' && <SettingsPage user={user} />}
-        {page === 'console' && <ConsoleLogsPage />}
+        {page === 'settings' && (
+          <SettingsPage user={user} onSignOut={handleLogout} onOpenConsole={() => setPage('console')} />
+        )}
+        {page === 'console' && <ConsoleLogsPage onBack={() => setPage('settings')} />}
       </AppLayout>
     </AppUpdateProvider>
   )

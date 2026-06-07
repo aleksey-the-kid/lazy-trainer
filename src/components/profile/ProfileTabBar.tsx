@@ -28,8 +28,8 @@ export function ProfileTabBar({
   ]
 
   return (
-    <nav className="-mx-4 shrink-0 border-t border-border/80 bg-card/95 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-md">
-      <div className="grid grid-cols-3 gap-2">
+    <nav className="-mx-4 shrink-0 px-4 py-2 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
+      <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map(({ id, label, icon: Icon }) => {
           const active = activeTab === id
           const tabDisabled = disabled && id !== 'overview'
@@ -41,15 +41,13 @@ export function ProfileTabBar({
               disabled={tabDisabled}
               onClick={() => onTabChange(id)}
               className={cn(
-                'flex flex-col items-center gap-1 rounded-xl py-2.5 text-xs font-medium transition-colors',
-                active
-                  ? 'bg-primary/15 text-primary'
-                  : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+                'filter-chip flex items-center gap-2',
+                active ? 'filter-chip-active' : 'filter-chip-inactive',
                 tabDisabled && 'cursor-not-allowed opacity-40',
               )}
             >
-              <Icon className="size-5" strokeWidth={active ? 2.25 : 2} />
-              {label}
+              <Icon className="size-4" strokeWidth={active ? 2.25 : 2} />
+              <span>{label}</span>
             </button>
           )
         })}

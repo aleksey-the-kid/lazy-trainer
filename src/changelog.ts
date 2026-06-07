@@ -8,6 +8,24 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.0.10',
+    date: '2026-06-07',
+    changes: {
+      ru: [
+        'Новый премиальный дизайн: светлая тёплая тема, оранжевые акценты, стеклянные панели',
+        'Нижняя навигация вместо бокового меню',
+        'Карточки шаблонов с фото, обновлённые графики и экран входа',
+        'Выход из аккаунта и консоль разработчика — в настройках',
+      ],
+      en: [
+        'Premium UI: warm light theme, orange accents, glass panels',
+        'Bottom navigation instead of sidebar menu',
+        'Photo-backed template cards, refreshed charts and login screen',
+        'Sign out and dev console moved to Settings',
+      ],
+    },
+  },
+  {
     version: '0.0.9',
     date: '2026-06-07',
     changes: {

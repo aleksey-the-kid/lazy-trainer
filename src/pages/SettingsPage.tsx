@@ -1,4 +1,4 @@
-import { Download, RefreshCw, Upload } from 'lucide-react'
+import { Download, LogOut, RefreshCw, Terminal, Upload } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -20,9 +20,11 @@ import {
 
 interface SettingsPageProps {
   user: User
+  onSignOut: () => void
+  onOpenConsole: () => void
 }
 
-export function SettingsPage({ user }: SettingsPageProps) {
+export function SettingsPage({ user, onSignOut, onOpenConsole }: SettingsPageProps) {
   const { t, language, setLanguage } = useI18n()
   const { updateAvailable, currentVersion, checkForUpdate, applyUpdate, reloadApp } =
     useAppUpdate()
@@ -123,8 +125,8 @@ export function SettingsPage({ user }: SettingsPageProps) {
   }
 
   return (
-    <div className="min-h-0 flex-1 space-y-4 overflow-y-auto">
-      <div className="sport-card p-4">
+    <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pb-2">
+      <div className="sport-card p-5">
         <div className="space-y-1.5">
           <Label className="text-muted-foreground">{t('settings.language')}</Label>
           <NativeSelect
@@ -138,7 +140,24 @@ export function SettingsPage({ user }: SettingsPageProps) {
         </div>
       </div>
 
-      <div className="sport-card space-y-3 p-4">
+      <div className="sport-card space-y-3 p-5">
+        <div>
+          <Label className="text-muted-foreground">{t('settings.account')}</Label>
+          <p className="mt-1 text-sm font-medium">{user.email}</p>
+        </div>
+
+        <Button variant="outline" className="w-full" onClick={onOpenConsole}>
+          <Terminal className="size-4" />
+          {t('nav.console')}
+        </Button>
+
+        <Button variant="destructive" className="w-full" onClick={onSignOut}>
+          <LogOut className="size-4" />
+          {t('nav.signOut')}
+        </Button>
+      </div>
+
+      <div className="sport-card space-y-3 p-5">
         <div>
           <Label className="text-muted-foreground">{t('settings.workoutData')}</Label>
           <p className="mt-1 text-sm text-muted-foreground">

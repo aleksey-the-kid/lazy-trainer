@@ -106,6 +106,7 @@ npm run lint     # ESLint
 ### Docs
 
 - [Workout data model](docs/DATABASE_WORKOUTS.md) — IndexedDB schema and import format
+- [Deploy to GitHub Pages](docs/GITHUB_PAGES.md) — CI deploy and production URL
 - [Supabase schema](supabase/schema.sql) — cloud backup tables
 
 ### License

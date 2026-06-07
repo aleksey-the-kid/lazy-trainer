@@ -1,0 +1,21 @@
+---
+description: App version and changelog — only when the user asks
+alwaysApply: true
+---
+
+# App version & changelog
+
+Version and release notes live in:
+
+- `src/version.ts` — `APP_VERSION` (semver, e.g. `0.0.1`)
+- `src/changelog.ts` — `CHANGELOG` array (newest first)
+
+**Do not** bump the version or update the changelog automatically after changes.
+
+Only update version and changelog when the user **explicitly asks** (e.g. «обнови версию», «добавь в чейнджлог», «релиз»).
+
+When asked:
+
+1. Bump the **patch** segment in `src/version.ts`.
+2. Keep `package.json` `"version"` in sync with `APP_VERSION`.
+3. Prepend a new entry to `CHANGELOG` with `version`, `date` (`YYYY-MM-DD`), and `changes.ru` / `changes.en` bullets summarizing what shipped since the last release.

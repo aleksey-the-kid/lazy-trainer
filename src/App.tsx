@@ -60,10 +60,7 @@ function App() {
   }
 
   return (
-    <AppUpdateProvider
-      currentPage={page}
-      onNavigateToSettings={() => setPage('settings')}
-    >
+    <AppUpdateProvider currentPage={page}>
       <AppLayout
         user={user}
         currentPage={page}

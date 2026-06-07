@@ -16,8 +16,9 @@ import { APP_VERSION } from '@/version'
 interface AppUpdateContextValue {
   updateAvailable: boolean
   currentVersion: string
-  checkForUpdate: () => Promise<void>
+  checkForUpdate: () => Promise<boolean>
   applyUpdate: () => Promise<void>
+  reloadApp: () => void
 }
 
 const AppUpdateContext = createContext<AppUpdateContextValue | null>(null)
@@ -25,39 +26,107 @@ const AppUpdateContext = createContext<AppUpdateContextValue | null>(null)
 interface AppUpdateProviderProps {
   children: ReactNode
   currentPage: string
-  onNavigateToSettings: () => void
+}
+
+async function getRegistration(
+  current?: ServiceWorkerRegistration,
+): Promise<ServiceWorkerRegistration | undefined> {
+  if (current) return current
+  if (!('serviceWorker' in navigator)) return undefined
+  return navigator.serviceWorker.getRegistration()
+}
+
+function watchInstallingWorker(registration: ServiceWorkerRegistration, onWaiting: () => void) {
+  const worker = registration.installing
+  if (!worker) return
+
+  worker.addEventListener('statechange', () => {
+    if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+      onWaiting()
+    }
+  })
 }
 
 export function AppUpdateProvider({
   children,
   currentPage,
-  onNavigateToSettings,
 }: AppUpdateProviderProps) {
   const { t } = useI18n()
   const registrationRef = useRef<ServiceWorkerRegistration | undefined>(undefined)
   const [toastDismissed, setToastDismissed] = useState(false)
+  const [hasWaitingWorker, setHasWaitingWorker] = useState(false)
 
   const {
-    needRefresh: [needRefresh],
+    needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
     immediate: true,
     onRegistered(registration) {
       registrationRef.current = registration
+      setHasWaitingWorker(Boolean(registration?.waiting))
       void registration?.update()
+      if (registration) {
+        registration.addEventListener('updatefound', () => {
+          watchInstallingWorker(registration, () => {
+            setHasWaitingWorker(true)
+            setNeedRefresh(true)
+          })
+        })
+      }
     },
     onNeedRefresh() {
       setToastDismissed(false)
+      setHasWaitingWorker(true)
     },
   })
 
+  const updateAvailable = needRefresh || hasWaitingWorker
+
+  const syncWaitingState = useCallback(async () => {
+    const registration = await getRegistration(registrationRef.current)
+    if (!registration) return false
+
+    registrationRef.current = registration
+    const waiting = Boolean(registration.waiting)
+    setHasWaitingWorker(waiting)
+    if (waiting) setNeedRefresh(true)
+    return waiting
+  }, [setNeedRefresh])
+
   const checkForUpdate = useCallback(async () => {
-    await registrationRef.current?.update()
-  }, [])
+    const registration = await getRegistration(registrationRef.current)
+    if (!registration) return false
+
+    registrationRef.current = registration
+    await registration.update()
+    return syncWaitingState()
+  }, [syncWaitingState])
 
   const applyUpdate = useCallback(async () => {
-    await updateServiceWorker(true)
-  }, [updateServiceWorker])
+    const registration = await getRegistration(registrationRef.current)
+    registrationRef.current = registration
+
+    if (registration?.waiting || needRefresh || hasWaitingWorker) {
+      await updateServiceWorker(true)
+      return
+    }
+
+    await registration?.update()
+    if (registration?.waiting) {
+      await updateServiceWorker(true)
+      return
+    }
+
+    window.location.reload()
+  }, [hasWaitingWorker, needRefresh, updateServiceWorker])
+
+  const reloadApp = useCallback(() => {
+    window.location.reload()
+  }, [])
+
+  useEffect(() => {
+    void syncWaitingState()
+  }, [syncWaitingState])
 
   useEffect(() => {
     function onVisibilityChange() {
@@ -76,25 +145,39 @@ export function AppUpdateProvider({
     }
   }, [currentPage, checkForUpdate])
 
-  const openSettingsForUpdate = useCallback(() => {
-    setToastDismissed(true)
-    onNavigateToSettings()
-  }, [onNavigateToSettings])
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
 
-  const toastVisible = needRefresh && !toastDismissed && currentPage !== 'settings'
+    function onControllerChange() {
+      window.location.reload()
+    }
+
+    navigator.serviceWorker.addEventListener('controllerchange', onControllerChange)
+    return () =>
+      navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange)
+  }, [])
+
+  const toastVisible = updateAvailable && !toastDismissed && currentPage !== 'settings'
 
   return (
     <AppUpdateContext.Provider
       value={{
-        updateAvailable: needRefresh,
+        updateAvailable,
         currentVersion: APP_VERSION,
         checkForUpdate,
         applyUpdate,
+        reloadApp,
       }}
     >
       {children}
       {toastVisible && (
-        <UpdateToast message={t('settings.updateToast')} onClick={openSettingsForUpdate} />
+        <UpdateToast
+          message={t('settings.updateToast')}
+          onClick={() => {
+            setToastDismissed(true)
+            void applyUpdate()
+          }}
+        />
       )}
     </AppUpdateContext.Provider>
   )

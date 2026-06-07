@@ -132,6 +132,9 @@ export type TranslationKey =
   | 'settings.updateToast'
   | 'settings.updateAvailable'
   | 'settings.updateApp'
+  | 'settings.checkForUpdates'
+  | 'settings.reloadApp'
+  | 'settings.upToDate'
   | 'settings.appVersion'
   | 'settings.appUpdates'
   | 'settings.changelog'
@@ -292,9 +295,12 @@ const en: Record<TranslationKey, string> = {
   'settings.importSuccess': 'Imported {count} records.',
   'settings.importInvalid': 'Invalid file format.',
   'settings.importError': 'Import failed. Try again.',
-  'settings.updateToast': 'New version available. Tap to open settings.',
+  'settings.updateToast': 'New version available. Tap to update.',
   'settings.updateAvailable': 'A new version of the app is available.',
-  'settings.updateApp': 'UPDATE',
+  'settings.updateApp': 'Update app',
+  'settings.checkForUpdates': 'Check for updates',
+  'settings.reloadApp': 'Reload app',
+  'settings.upToDate': 'You are on the latest version.',
   'settings.appVersion': 'Version {version}',
   'settings.appUpdates': 'App updates',
   'settings.changelog': 'Changelog',
@@ -459,9 +465,12 @@ const ru: Record<TranslationKey, string> = {
   'settings.importSuccess': 'Импортировано записей: {count}.',
   'settings.importInvalid': 'Неверный формат файла.',
   'settings.importError': 'Не удалось импортировать. Попробуйте снова.',
-  'settings.updateToast': 'Доступна новая версия. Нажмите, чтобы открыть настройки.',
+  'settings.updateToast': 'Доступна новая версия. Нажмите, чтобы обновить.',
   'settings.updateAvailable': 'Доступна новая версия приложения.',
-  'settings.updateApp': 'ОБНОВИТЬ',
+  'settings.updateApp': 'Обновить приложение',
+  'settings.checkForUpdates': 'Проверить обновления',
+  'settings.reloadApp': 'Перезагрузить',
+  'settings.upToDate': 'Установлена последняя версия.',
   'settings.appVersion': 'Версия {version}',
   'settings.appUpdates': 'Обновление приложения',
   'settings.changelog': 'История изменений',

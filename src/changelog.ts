@@ -8,6 +8,22 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.0.9',
+    date: '2026-06-07',
+    changes: {
+      ru: [
+        'Кнопки «Проверить обновления» и «Перезагрузить» в настройках',
+        'Тост обновления сразу применяет новую версию',
+        'Автопроверка обновлений при возврате в приложение',
+      ],
+      en: [
+        'Check for updates and Reload buttons in settings',
+        'Update toast applies the new version directly',
+        'Auto-check for updates when returning to the app',
+      ],
+    },
+  },
+  {
     version: '0.0.8',
     date: '2026-06-07',
     changes: {

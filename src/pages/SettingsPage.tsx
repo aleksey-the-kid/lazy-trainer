@@ -24,11 +24,14 @@ interface SettingsPageProps {
 
 export function SettingsPage({ user }: SettingsPageProps) {
   const { t, language, setLanguage } = useI18n()
-  const { updateAvailable, currentVersion, checkForUpdate, applyUpdate } = useAppUpdate()
+  const { updateAvailable, currentVersion, checkForUpdate, applyUpdate, reloadApp } =
+    useAppUpdate()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [exporting, setExporting] = useState(false)
   const [importing, setImporting] = useState(false)
   const [updating, setUpdating] = useState(false)
+  const [checkingUpdates, setCheckingUpdates] = useState(false)
+  const [updateCheckMessage, setUpdateCheckMessage] = useState<string | null>(null)
   const [syncing, setSyncing] = useState(false)
   const [changelogOpen, setChangelogOpen] = useState(false)
   const [syncMessage, setSyncMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(
@@ -87,10 +90,22 @@ export function SettingsPage({ user }: SettingsPageProps) {
 
   async function handleUpdate() {
     setUpdating(true)
+    setUpdateCheckMessage(null)
     try {
       await applyUpdate()
     } finally {
       setUpdating(false)
+    }
+  }
+
+  async function handleCheckForUpdates() {
+    setUpdateCheckMessage(null)
+    setCheckingUpdates(true)
+    try {
+      const found = await checkForUpdate()
+      setUpdateCheckMessage(found ? t('settings.updateAvailable') : t('settings.upToDate'))
+    } finally {
+      setCheckingUpdates(false)
     }
   }
 
@@ -215,14 +230,34 @@ export function SettingsPage({ user }: SettingsPageProps) {
           </p>
         </div>
 
-        {updateAvailable && (
-          <div className="space-y-3 rounded-lg border border-primary/30 bg-primary/5 p-3">
-            <p className="text-sm text-foreground">{t('settings.updateAvailable')}</p>
-            <Button className="w-full" disabled={updating} onClick={() => void handleUpdate()}>
-              {updating ? t('common.loading') : t('settings.updateApp')}
-            </Button>
-          </div>
-        )}
+        <div className="space-y-2">
+          {updateAvailable && (
+            <div className="space-y-2 rounded-lg border border-primary/30 bg-primary/5 p-3">
+              <p className="text-sm text-foreground">{t('settings.updateAvailable')}</p>
+              <Button className="w-full" disabled={updating} onClick={() => void handleUpdate()}>
+                {updating ? t('common.loading') : t('settings.updateApp')}
+              </Button>
+            </div>
+          )}
+
+          <Button
+            variant="outline"
+            className="w-full"
+            disabled={checkingUpdates || updating}
+            onClick={() => void handleCheckForUpdates()}
+          >
+            <RefreshCw className={`size-4 ${checkingUpdates ? 'animate-spin' : ''}`} />
+            {checkingUpdates ? t('common.loading') : t('settings.checkForUpdates')}
+          </Button>
+
+          <Button variant="outline" className="w-full" disabled={updating} onClick={reloadApp}>
+            {t('settings.reloadApp')}
+          </Button>
+
+          {updateCheckMessage && (
+            <p className="text-sm text-muted-foreground">{updateCheckMessage}</p>
+          )}
+        </div>
 
         <Button
           variant="outline"

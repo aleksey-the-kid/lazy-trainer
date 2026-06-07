@@ -3,13 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { ExerciseCharts } from '@/components/workouts/ExerciseCharts'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/native-select'
 import type { ExerciseSetHistory, KnownExercise } from '@/db'
 import { useI18n } from '@/i18n/context'
 import {
@@ -127,21 +121,14 @@ export function ExerciseHistoryTab({ userId }: ExerciseHistoryTabProps) {
     <div className="space-y-4">
       <div className="sport-card space-y-1.5 p-4">
         <Label className="text-muted-foreground">{t('workouts.selectExercise')}</Label>
-        <Select
+        <NativeSelect
           value={selected}
-          onValueChange={(value) => value && setSelected(value)}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {exercises.map((exercise) => (
-              <SelectItem key={exercise.id} value={exercise.name}>
-                {exercise.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          options={exercises.map((exercise) => ({
+            value: exercise.name,
+            label: exercise.name,
+          }))}
+          onValueChange={setSelected}
+        />
       </div>
 
       {history.length === 0 ? (

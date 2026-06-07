@@ -10,13 +10,7 @@ import { usePageHeader } from '@/components/layout/PageHeaderContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/native-select'
 import type { User, UserProfile } from '@/db'
 import { useI18n } from '@/i18n/context'
 import { ACTIVITY_LEVELS } from '@/i18n/translations'
@@ -146,9 +140,10 @@ export function ProfilePage({ user }: ProfilePageProps) {
               <div className="space-y-1.5">
                 <Label className="text-muted-foreground">{t('profile.sex')}</Label>
                 {editing ? (
-                  <Select
+                  <NativeSelect
                     value={draft.sex ?? ''}
-                    items={[
+                    placeholder={t('profile.notSet')}
+                    options={[
                       { value: 'male', label: t('profile.sexMale') },
                       { value: 'female', label: t('profile.sexFemale') },
                     ]}
@@ -157,15 +152,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
                         sex: value ? (value as UserProfile['sex']) : null,
                       })
                     }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={t('profile.notSet')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">{t('profile.sexMale')}</SelectItem>
-                      <SelectItem value="female">{t('profile.sexFemale')}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 ) : (
                   <p className="sport-field min-h-10 text-base">
                     {data.sex === 'male'
@@ -216,9 +203,9 @@ export function ProfilePage({ user }: ProfilePageProps) {
               <div className="space-y-1.5">
                 <Label className="text-muted-foreground">{t('profile.activity')}</Label>
                 {editing ? (
-                  <Select
+                  <NativeSelect
                     value={draft.activityLevel}
-                    items={ACTIVITY_LEVELS.map((level) => ({
+                    options={ACTIVITY_LEVELS.map((level) => ({
                       value: level,
                       label: t(`activity.${level}`),
                     }))}
@@ -227,18 +214,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
                         activityLevel: value as UserProfile['activityLevel'],
                       })
                     }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ACTIVITY_LEVELS.map((level) => (
-                        <SelectItem key={level} value={level}>
-                          {t(`activity.${level}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
                 ) : (
                   <p className="sport-field min-h-10 text-base">
                     {t(`activity.${data.activityLevel}`)}

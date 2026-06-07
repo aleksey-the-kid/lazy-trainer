@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.0.8',
+    date: '2026-06-07',
+    changes: {
+      ru: ['Нативные системные селекторы вместо кастомных выпадающих списков'],
+      en: ['Native OS pickers instead of custom dropdowns'],
+    },
+  },
+  {
     version: '0.0.7',
     date: '2026-06-07',
     changes: {

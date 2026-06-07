@@ -3,13 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/native-select'
 import type { Language, User } from '@/db'
 import { CHANGELOG } from '@/changelog'
 import { useI18n } from '@/i18n/context'
@@ -118,22 +112,14 @@ export function SettingsPage({ user }: SettingsPageProps) {
       <div className="sport-card p-4">
         <div className="space-y-1.5">
           <Label className="text-muted-foreground">{t('settings.language')}</Label>
-          <Select
+          <NativeSelect
             value={language}
-            items={[
+            options={[
               { value: 'ru', label: t('settings.languageRu') },
               { value: 'en', label: t('settings.languageEn') },
             ]}
-            onValueChange={(value) => value && void setLanguage(value as Language)}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ru">{t('settings.languageRu')}</SelectItem>
-              <SelectItem value="en">{t('settings.languageEn')}</SelectItem>
-            </SelectContent>
-          </Select>
+            onValueChange={(value) => void setLanguage(value as Language)}
+          />
         </div>
       </div>
 

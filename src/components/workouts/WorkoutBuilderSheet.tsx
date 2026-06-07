@@ -4,13 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/native-select'
 import {
   Sheet,
   SheetContent,
@@ -243,31 +237,19 @@ export function WorkoutBuilderSheet({
               </div>
               <div className="space-y-1.5">
                 <Label>{t('workouts.cardioEquipment')}</Label>
-                <Select
+                <NativeSelect
                   value={draft.cardioEquipment ?? 'bike'}
-                  items={CARDIO_EQUIPMENT.map((equipment) => ({
+                  options={CARDIO_EQUIPMENT.map((equipment) => ({
                     value: equipment,
                     label: t(`workouts.equipment.${equipment}` as TranslationKey),
                   }))}
                   onValueChange={(value) =>
-                    value &&
                     setDraft({
                       ...draft,
                       cardioEquipment: value as CardioEquipment,
                     })
                   }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CARDIO_EQUIPMENT.map((equipment) => (
-                      <SelectItem key={equipment} value={equipment}>
-                        {t(`workouts.equipment.${equipment}` as TranslationKey)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                />
               </div>
             </div>
           ) : (

@@ -53,6 +53,18 @@ async function fetchByUserId(
   return (data ?? []) as Record<string, unknown>[]
 }
 
+async function fetchByUserIdSafe(
+  table: string,
+  userId: string,
+): Promise<Record<string, unknown>[]> {
+  try {
+    return await fetchByUserId(table, userId)
+  } catch (error) {
+    console.warn(`[supabase] restore ${table} failed:`, error)
+    return []
+  }
+}
+
 function fromProfile(row: Record<string, unknown>): UserProfile {
   return {
     userId: String(row.user_id),
@@ -191,6 +203,16 @@ async function clearLocalUserData(userId: string): Promise<void> {
   ])
 }
 
+export async function restoreRemoteUserIfConfigured(userId: string): Promise<void> {
+  if (!isSupabaseConfigured()) return
+
+  try {
+    await restoreUserFromSupabase(userId)
+  } catch (error) {
+    console.warn('[supabase] restore failed:', error)
+  }
+}
+
 export async function restoreUserFromSupabase(userId: string): Promise<void> {
   if (!isSupabaseConfigured()) return
 
@@ -209,19 +231,21 @@ export async function restoreUserFromSupabase(userId: string): Promise<void> {
     achievementRows,
     settingsResult,
   ] = await Promise.all([
-    fetchByUserId('profiles', userId),
-    fetchByUserId('weight_entries', userId),
-    fetchByUserId('body_measurements', userId),
-    fetchByUserId('workout_templates', userId),
-    fetchByUserId('workout_sessions', userId),
-    fetchByUserId('workout_history', userId),
-    fetchByUserId('exercise_set_history', userId),
-    fetchByUserId('known_exercises', userId),
-    fetchByUserId('user_achievements', userId),
+    fetchByUserIdSafe('profiles', userId),
+    fetchByUserIdSafe('weight_entries', userId),
+    fetchByUserIdSafe('body_measurements', userId),
+    fetchByUserIdSafe('workout_templates', userId),
+    fetchByUserIdSafe('workout_sessions', userId),
+    fetchByUserIdSafe('workout_history', userId),
+    fetchByUserIdSafe('exercise_set_history', userId),
+    fetchByUserIdSafe('known_exercises', userId),
+    fetchByUserIdSafe('user_achievements', userId),
     supabase.from('app_settings').select('*').eq('id', 'app').maybeSingle(),
   ])
 
-  if (settingsResult.error) throw settingsResult.error
+  if (settingsResult.error) {
+    console.warn('[supabase] restore app_settings failed:', settingsResult.error)
+  }
 
   const profile = profileRows[0] ? fromProfile(profileRows[0]) : null
   const weightEntries = weightRows.map(fromWeightEntry)

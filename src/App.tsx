@@ -9,7 +9,7 @@ import type { User } from '@/db'
 import { saveDevTestUser } from '@/lib/dev-auth'
 import {
   clearCurrentUser,
-  getCurrentUser,
+  hydrateCurrentUser,
   saveGoogleUser,
 } from '@/lib/google-auth'
 import { ConsoleLogsPage } from '@/pages/ConsoleLogsPage'
@@ -27,7 +27,7 @@ function App() {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
   useEffect(() => {
-    getCurrentUser()
+    hydrateCurrentUser()
       .then((storedUser) => setUser(storedUser ?? null))
       .finally(() => setLoading(false))
   }, [])

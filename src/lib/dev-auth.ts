@@ -1,7 +1,6 @@
 import { db, type User } from '@/db'
 import { ensureProfile } from '@/lib/profile'
-import { isSupabaseConfigured } from '@/lib/supabase/client'
-import { restoreUserFromSupabase } from '@/lib/supabase/restore'
+import { restoreRemoteUserIfConfigured } from '@/lib/supabase/restore'
 import { mirrorUserUpsert } from '@/lib/supabase/sync'
 
 export const DEV_TEST_USER_ID = 'dev-test-user'
@@ -24,13 +23,7 @@ export async function saveDevTestUser(): Promise<User> {
     loggedInAt: new Date(),
   }
 
-  if (isSupabaseConfigured()) {
-    try {
-      await restoreUserFromSupabase(user.id)
-    } catch (error) {
-      console.warn('[supabase] restore failed:', error)
-    }
-  }
+  await restoreRemoteUserIfConfigured(user.id)
 
   await db.users.put(user)
   mirrorUserUpsert(user)

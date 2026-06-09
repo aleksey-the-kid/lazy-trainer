@@ -2,8 +2,7 @@ import { jwtDecode } from 'jwt-decode'
 
 import { db, type User } from '@/db'
 import { ensureProfile } from '@/lib/profile'
-import { isSupabaseConfigured } from '@/lib/supabase/client'
-import { restoreUserFromSupabase } from '@/lib/supabase/restore'
+import { restoreRemoteUserIfConfigured } from '@/lib/supabase/restore'
 import { mirrorUserDelete, mirrorUserUpsert } from '@/lib/supabase/sync'
 
 interface GoogleJwtPayload {
@@ -24,13 +23,7 @@ export async function saveGoogleUser(credential: string): Promise<User> {
     loggedInAt: new Date(),
   }
 
-  if (isSupabaseConfigured()) {
-    try {
-      await restoreUserFromSupabase(user.id)
-    } catch (error) {
-      console.warn('[supabase] restore failed:', error)
-    }
-  }
+  await restoreRemoteUserIfConfigured(user.id)
 
   await db.users.put(user)
   mirrorUserUpsert(user)
@@ -41,6 +34,14 @@ export async function saveGoogleUser(credential: string): Promise<User> {
 export async function getCurrentUser(): Promise<User | undefined> {
   const users = await db.users.orderBy('loggedInAt').reverse().toArray()
   return users[0]
+}
+
+export async function hydrateCurrentUser(): Promise<User | undefined> {
+  const user = await getCurrentUser()
+  if (!user) return undefined
+
+  await restoreRemoteUserIfConfigured(user.id)
+  return user
 }
 
 export async function clearCurrentUser(): Promise<void> {

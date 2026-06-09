@@ -20,7 +20,7 @@ If the env vars are empty, Supabase sync is skipped — the app behaves as befor
 
 ## Login restore
 
-On Google sign-in, when Supabase is configured, the app first loads all data for that user from Supabase into IndexedDB (profile, workouts, history, settings, etc.). Local data for that user is replaced with the remote copy. After that, the session user is saved and the app works offline as usual.
+When Supabase is configured, the app loads all data for the signed-in user from Supabase into IndexedDB (profile, workouts, history, settings, etc.) on **Google sign-in** and on **every app open** while a session exists. Local data for that user is replaced with the remote copy. After that, the app works offline as usual.
 
 ## Manual upload
 

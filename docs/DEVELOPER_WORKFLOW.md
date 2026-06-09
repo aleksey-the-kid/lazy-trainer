@@ -37,12 +37,26 @@ All client env vars must be prefixed `VITE_` (embedded at build time).
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `VITE_GOOGLE_CLIENT_ID` | **Yes** (for login) | Google OAuth client ID |
+| `VITE_GOOGLE_CLIENT_ID` | **Yes** (for production login) | Google OAuth client ID |
 | `VITE_SUPABASE_URL` | No | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | No | Supabase anon key |
 | `VITE_BASE_PATH` | Build-time only | Asset base path (default `/`; CI uses `/lazy-trainer/`) |
 
 If Supabase vars are empty, cloud sync is skipped — app works fully offline.
+
+### Dev test login (localhost only)
+
+When running `npm run dev` on `localhost` or `127.0.0.1`, the login page shows a **Dev test login** button below Google Sign-In. It signs you in as a fixed local user without Google OAuth:
+
+| Field | Value |
+|-------|-------|
+| User id | `dev-test-user` |
+| Email | `dev@localhost` |
+| Name | `Dev User` |
+
+Use this to exercise authenticated app logic (workouts, achievements, profile) when `VITE_GOOGLE_CLIENT_ID` is missing or OAuth setup is inconvenient. The button is stripped from production builds (`npm run build`) and is not shown on LAN IPs (e.g. `192.168.x.x`) — use Google OAuth for those cases.
+
+Implementation: `src/lib/dev-auth.ts`, gated by `import.meta.env.DEV` and hostname check.
 
 ### Setup Guides
 

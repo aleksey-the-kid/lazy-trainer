@@ -1,5 +1,6 @@
 import type { WeightEntry } from '@/db'
 import { db } from '@/db'
+import { checkAchievements } from '@/lib/achievements'
 import { mirrorWeightEntryUpsert } from '@/lib/supabase/sync'
 
 function todayDateString(): string {
@@ -28,6 +29,7 @@ export async function recordWeight(
 
   await db.weightEntries.put(entry)
   mirrorWeightEntryUpsert(entry)
+  void checkAchievements(userId, { notify: true })
   return entry
 }
 

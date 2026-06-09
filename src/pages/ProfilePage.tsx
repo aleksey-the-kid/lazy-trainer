@@ -2,6 +2,7 @@ import { Check, Pencil } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 import { CalorieBreakdownSheet } from '@/components/profile/CalorieBreakdownSheet'
+import { AchievementsTab } from '@/components/profile/AchievementsTab'
 import { ProfileHistoryTab } from '@/components/profile/ProfileHistoryTab'
 import { ProfileMeasurementsTab } from '@/components/profile/ProfileMeasurementsTab'
 import { ProfileTabBar, type ProfileTab } from '@/components/profile/ProfileTabBar'
@@ -267,8 +268,10 @@ export function ProfilePage({ user }: ProfilePageProps) {
             userId={user.id}
             currentWeight={profile.weightKg}
           />
-        ) : (
+        ) : activeTab === 'measurements' ? (
           <ProfileMeasurementsTab userId={user.id} />
+        ) : (
+          <AchievementsTab userId={user.id} />
         )}
       </div>
 
@@ -279,6 +282,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
         overviewLabel={t('profile.tabOverview')}
         historyLabel={t('profile.tabHistory')}
         measurementsLabel={t('profile.tabMeasurements')}
+        achievementsLabel={t('profile.tabAchievements')}
       />
     </div>
   )

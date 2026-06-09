@@ -1,8 +1,8 @@
-import { History, Ruler, User } from 'lucide-react'
+import { History, Ruler, Trophy, User } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
-export type ProfileTab = 'overview' | 'history' | 'measurements'
+export type ProfileTab = 'overview' | 'history' | 'measurements' | 'achievements'
 
 interface ProfileTabBarProps {
   activeTab: ProfileTab
@@ -11,6 +11,7 @@ interface ProfileTabBarProps {
   overviewLabel: string
   historyLabel: string
   measurementsLabel: string
+  achievementsLabel: string
 }
 
 export function ProfileTabBar({
@@ -20,11 +21,13 @@ export function ProfileTabBar({
   overviewLabel,
   historyLabel,
   measurementsLabel,
+  achievementsLabel,
 }: ProfileTabBarProps) {
   const tabs: { id: ProfileTab; label: string; icon: typeof User }[] = [
     { id: 'overview', label: overviewLabel, icon: User },
     { id: 'history', label: historyLabel, icon: History },
     { id: 'measurements', label: measurementsLabel, icon: Ruler },
+    { id: 'achievements', label: achievementsLabel, icon: Trophy },
   ]
 
   return (

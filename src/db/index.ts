@@ -166,6 +166,13 @@ export interface AppSettings {
   language: Language
 }
 
+export interface UserAchievement {
+  id: string
+  userId: string
+  achievementId: string
+  unlockedAt: Date
+}
+
 const db = new Dexie('LazyTrainerDB') as Dexie & {
   users: EntityTable<User, 'id'>
   profiles: EntityTable<UserProfile, 'userId'>
@@ -177,6 +184,7 @@ const db = new Dexie('LazyTrainerDB') as Dexie & {
   exerciseSetHistory: EntityTable<ExerciseSetHistory, 'id'>
   knownExercises: EntityTable<KnownExercise, 'id'>
   settings: EntityTable<AppSettings, 'id'>
+  userAchievements: EntityTable<UserAchievement, 'id'>
 }
 
 db.version(1).stores({
@@ -401,6 +409,20 @@ db.version(12).stores({
     .modify((entry: WorkoutHistoryEntry) => {
       entry.note ??= null
     })
+})
+
+db.version(13).stores({
+  users: 'id, email, loggedInAt',
+  profiles: 'userId',
+  weightEntries: 'id, userId, date',
+  bodyMeasurements: 'id, userId, date',
+  workoutTemplates: 'id, userId, updatedAt, type',
+  workoutSessions: 'id, userId, status, startedAt, [userId+status]',
+  workoutHistory: 'id, userId, completedAt',
+  exerciseSetHistory: 'id, userId, exerciseName, date, [userId+exerciseName]',
+  knownExercises: 'id, userId',
+  settings: 'id',
+  userAchievements: 'id, userId, achievementId',
 })
 
 export { db }

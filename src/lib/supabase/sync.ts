@@ -4,6 +4,7 @@ import type {
   ExerciseSetHistory,
   KnownExercise,
   User,
+  UserAchievement,
   UserProfile,
   WeightEntry,
   WorkoutHistoryEntry,
@@ -78,6 +79,7 @@ async function wipeSupabaseUserData(userId: string): Promise<void> {
     deleteByUserId('workout_history', userId),
     deleteByUserId('exercise_set_history', userId),
     deleteByUserId('known_exercises', userId),
+    deleteByUserId('user_achievements', userId),
     deleteById('users', userId),
   ])
 }
@@ -200,6 +202,15 @@ function mapKnownExercise(exercise: KnownExercise) {
   }
 }
 
+function mapUserAchievement(achievement: UserAchievement) {
+  return {
+    id: achievement.id,
+    user_id: achievement.userId,
+    achievement_id: achievement.achievementId,
+    unlocked_at: achievement.unlockedAt.toISOString(),
+  }
+}
+
 function mapAppSettings(settings: AppSettings) {
   return {
     id: settings.id,
@@ -263,6 +274,10 @@ export function mirrorKnownExerciseUpsert(exercise: KnownExercise): void {
   mirror(async () => upsertRow('known_exercises', mapKnownExercise(exercise)))
 }
 
+export function mirrorUserAchievementUpsert(achievement: UserAchievement): void {
+  mirror(async () => upsertRow('user_achievements', mapUserAchievement(achievement)))
+}
+
 export function mirrorAppSettingsUpsert(settings: AppSettings): void {
   mirror(async () => upsertRow('app_settings', mapAppSettings(settings)))
 }
@@ -320,6 +335,7 @@ export async function pushLocalUserToSupabase(userId: string): Promise<void> {
     workoutHistory,
     exerciseSetHistory,
     knownExercises,
+    userAchievements,
     appSettings,
   ] = await Promise.all([
     db.users.get(userId),
@@ -331,6 +347,7 @@ export async function pushLocalUserToSupabase(userId: string): Promise<void> {
     db.workoutHistory.where('userId').equals(userId).toArray(),
     db.exerciseSetHistory.where('userId').equals(userId).toArray(),
     db.knownExercises.where('userId').equals(userId).toArray(),
+    db.userAchievements.where('userId').equals(userId).toArray(),
     db.settings.get('app'),
   ])
 
@@ -345,5 +362,6 @@ export async function pushLocalUserToSupabase(userId: string): Promise<void> {
   await upsertRows('workout_history', workoutHistory.map(mapWorkoutHistory))
   await upsertRows('exercise_set_history', exerciseSetHistory.map(mapExerciseSetHistory))
   await upsertRows('known_exercises', knownExercises.map(mapKnownExercise))
+  await upsertRows('user_achievements', userAchievements.map(mapUserAchievement))
   if (appSettings) await upsertRow('app_settings', mapAppSettings(appSettings))
 }

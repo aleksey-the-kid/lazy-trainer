@@ -8,6 +8,7 @@ import type {
   Language,
   Sex,
   UserProfile,
+  UserAchievement,
   WeightEntry,
   WorkoutExerciseSession,
   WorkoutExerciseTemplate,
@@ -160,6 +161,15 @@ function fromKnownExercise(row: Record<string, unknown>): KnownExercise {
   }
 }
 
+function fromUserAchievement(row: Record<string, unknown>): UserAchievement {
+  return {
+    id: String(row.id),
+    userId: String(row.user_id),
+    achievementId: String(row.achievement_id),
+    unlockedAt: parseDate(row.unlocked_at),
+  }
+}
+
 function fromAppSettings(row: Record<string, unknown>): AppSettings {
   return {
     id: 'app',
@@ -177,6 +187,7 @@ async function clearLocalUserData(userId: string): Promise<void> {
     db.workoutHistory.where('userId').equals(userId).delete(),
     db.exerciseSetHistory.where('userId').equals(userId).delete(),
     db.knownExercises.where('userId').equals(userId).delete(),
+    db.userAchievements.where('userId').equals(userId).delete(),
   ])
 }
 
@@ -195,6 +206,7 @@ export async function restoreUserFromSupabase(userId: string): Promise<void> {
     historyRows,
     setHistoryRows,
     knownExerciseRows,
+    achievementRows,
     settingsResult,
   ] = await Promise.all([
     fetchByUserId('profiles', userId),
@@ -205,6 +217,7 @@ export async function restoreUserFromSupabase(userId: string): Promise<void> {
     fetchByUserId('workout_history', userId),
     fetchByUserId('exercise_set_history', userId),
     fetchByUserId('known_exercises', userId),
+    fetchByUserId('user_achievements', userId),
     supabase.from('app_settings').select('*').eq('id', 'app').maybeSingle(),
   ])
 
@@ -218,6 +231,7 @@ export async function restoreUserFromSupabase(userId: string): Promise<void> {
   const workoutHistory = historyRows.map(fromWorkoutHistory)
   const exerciseSetHistory = setHistoryRows.map(fromExerciseSetHistory)
   const knownExercises = knownExerciseRows.map(fromKnownExercise)
+  const userAchievements = achievementRows.map(fromUserAchievement)
   const appSettings = settingsResult.data ? fromAppSettings(settingsResult.data) : null
 
   await db.transaction(
@@ -231,6 +245,7 @@ export async function restoreUserFromSupabase(userId: string): Promise<void> {
       db.workoutHistory,
       db.exerciseSetHistory,
       db.knownExercises,
+      db.userAchievements,
       db.settings,
     ],
     async () => {
@@ -244,6 +259,7 @@ export async function restoreUserFromSupabase(userId: string): Promise<void> {
       if (workoutHistory.length) await db.workoutHistory.bulkPut(workoutHistory)
       if (exerciseSetHistory.length) await db.exerciseSetHistory.bulkPut(exerciseSetHistory)
       if (knownExercises.length) await db.knownExercises.bulkPut(knownExercises)
+      if (userAchievements.length) await db.userAchievements.bulkPut(userAchievements)
       if (appSettings) await db.settings.put(appSettings)
     },
   )

@@ -6,6 +6,7 @@ import type {
   WorkoutTemplate,
 } from '@/db'
 import { db } from '@/db'
+import { checkAchievements } from '@/lib/achievements'
 import {
   calculateSessionVolume,
   createId,
@@ -209,6 +210,8 @@ export async function completeWorkout(
       mirrorKnownExerciseUpsert(entry)
     }
   }
+
+  void checkAchievements(session.userId, { notify: true })
 
   return historyEntry
 }

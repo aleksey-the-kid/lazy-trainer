@@ -1,16 +1,20 @@
 import { GoogleLoginButton } from '@/components/GoogleLoginButton'
+import { Button } from '@/components/ui/button'
 import { useI18n } from '@/i18n/context'
+import { isDevTestLoginAvailable } from '@/lib/dev-auth'
 import { UI_IMAGES } from '@/lib/ui-images'
 import { useEffect, useState } from 'react'
 
 interface LoginPageProps {
   onSuccess: (credential: string) => void
+  onDevTestLogin: () => void | Promise<void>
   missingClientId: boolean
 }
 
-export function LoginPage({ onSuccess, missingClientId }: LoginPageProps) {
+export function LoginPage({ onSuccess, onDevTestLogin, missingClientId }: LoginPageProps) {
   const { t } = useI18n()
   const [error, setError] = useState<string | null>(null)
+  const devTestLoginAvailable = isDevTestLoginAvailable()
 
   useEffect(() => {
     setError(null)
@@ -36,19 +40,33 @@ export function LoginPage({ onSuccess, missingClientId }: LoginPageProps) {
             <p className="mt-2 text-sm text-muted-foreground">{t('login.subtitle')}</p>
           </div>
 
-          {missingClientId ? (
-            <p className="text-center text-sm text-destructive">
-              {t('login.missingClientId')}
-            </p>
-          ) : (
-            <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-col items-center gap-3">
+            {missingClientId && (
+              <p className="text-center text-sm text-destructive">
+                {t('login.missingClientId')}
+              </p>
+            )}
+
+            {!missingClientId && (
               <GoogleLoginButton
                 onSuccess={onSuccess}
                 onError={() => setError(t('login.failed'))}
               />
-              {error && <p className="text-sm text-destructive">{error}</p>}
-            </div>
-          )}
+            )}
+
+            {devTestLoginAvailable && (
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-muted-foreground"
+                onClick={() => void onDevTestLogin()}
+              >
+                {t('login.devTestLogin')}
+              </Button>
+            )}
+
+            {error && <p className="text-sm text-destructive">{error}</p>}
+          </div>
         </div>
       </div>
     </main>

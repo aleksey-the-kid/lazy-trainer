@@ -8,6 +8,24 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.0.11',
+    date: '2026-06-09',
+    changes: {
+      ru: [
+        'Базовые достижения: 6 вех, вкладка в профиле, тост при разблокировке',
+        'Синхронизация достижений с Supabase и ретроактивная проверка истории',
+        'Тестовый вход на localhost в dev-режиме без Google OAuth',
+        'Исправлены фото карточек силовых и кардио-тренировок',
+      ],
+      en: [
+        'Basic achievements: 6 milestones, Profile tab, unlock toast',
+        'Achievement sync to Supabase and retroactive history backfill',
+        'Dev test login on localhost without Google OAuth',
+        'Fixed strength and cardio template card images',
+      ],
+    },
+  },
+  {
     version: '0.0.10',
     date: '2026-06-07',
     changes: {

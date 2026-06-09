@@ -11,6 +11,7 @@ export type TranslationKey =
   | 'login.subtitle'
   | 'login.missingClientId'
   | 'login.failed'
+  | 'login.devTestLogin'
   | 'profile.title'
   | 'profile.firstName'
   | 'profile.lastName'
@@ -36,6 +37,23 @@ export type TranslationKey =
   | 'profile.tabOverview'
   | 'profile.tabHistory'
   | 'profile.tabMeasurements'
+  | 'profile.tabAchievements'
+  | 'achievements.title'
+  | 'achievements.locked'
+  | 'achievements.unlockedAt'
+  | 'achievements.unlockedToast'
+  | 'achievements.firstWorkout.title'
+  | 'achievements.firstWorkout.description'
+  | 'achievements.workouts5.title'
+  | 'achievements.workouts5.description'
+  | 'achievements.workouts10.title'
+  | 'achievements.workouts10.description'
+  | 'achievements.firstTemplate.title'
+  | 'achievements.firstTemplate.description'
+  | 'achievements.firstWeight.title'
+  | 'achievements.firstWeight.description'
+  | 'achievements.streak3.title'
+  | 'achievements.streak3.description'
   | 'profile.historyEmpty'
   | 'profile.weightChart'
   | 'profile.historyList'
@@ -171,6 +189,7 @@ const en: Record<TranslationKey, string> = {
   'login.missingClientId':
     'Missing VITE_GOOGLE_CLIENT_ID. Copy .env.example to .env and follow docs/GOOGLE_LOGIN.md.',
   'login.failed': 'Google sign-in failed. Try again.',
+  'login.devTestLogin': 'Dev test login',
   'profile.title': 'Profile',
   'profile.firstName': 'First name',
   'profile.lastName': 'Last name',
@@ -199,6 +218,23 @@ const en: Record<TranslationKey, string> = {
   'profile.tabOverview': 'Profile',
   'profile.tabHistory': 'History',
   'profile.tabMeasurements': 'Measurements',
+  'profile.tabAchievements': 'Achievements',
+  'achievements.title': 'Achievements',
+  'achievements.locked': 'Locked',
+  'achievements.unlockedAt': 'Unlocked {date}',
+  'achievements.unlockedToast': 'Achievement unlocked: {title}',
+  'achievements.firstWorkout.title': 'First workout',
+  'achievements.firstWorkout.description': 'Complete your first workout',
+  'achievements.workouts5.title': 'Getting started',
+  'achievements.workouts5.description': 'Complete 5 workouts',
+  'achievements.workouts10.title': 'Regular training',
+  'achievements.workouts10.description': 'Complete 10 workouts',
+  'achievements.firstTemplate.title': 'Planner',
+  'achievements.firstTemplate.description': 'Create your first workout template',
+  'achievements.firstWeight.title': 'On the scale',
+  'achievements.firstWeight.description': 'Log your weight for the first time',
+  'achievements.streak3.title': 'Three-day streak',
+  'achievements.streak3.description': 'Train on 3 different days',
   'profile.historyEmpty': 'Update your weight to start tracking progress.',
   'profile.weightChart': 'Weight trend',
   'profile.historyList': 'Entries',
@@ -343,6 +379,7 @@ const ru: Record<TranslationKey, string> = {
   'login.missingClientId':
     'Не задан VITE_GOOGLE_CLIENT_ID. Скопируйте .env.example в .env и следуйте docs/GOOGLE_LOGIN.md.',
   'login.failed': 'Не удалось войти через Google. Попробуйте снова.',
+  'login.devTestLogin': 'Тестовый вход (dev)',
   'profile.title': 'Профиль',
   'profile.firstName': 'Имя',
   'profile.lastName': 'Фамилия',
@@ -371,6 +408,23 @@ const ru: Record<TranslationKey, string> = {
   'profile.tabOverview': 'Профиль',
   'profile.tabHistory': 'История',
   'profile.tabMeasurements': 'Объёмы',
+  'profile.tabAchievements': 'Ачивки',
+  'achievements.title': 'Достижения',
+  'achievements.locked': 'Закрыто',
+  'achievements.unlockedAt': 'Получено {date}',
+  'achievements.unlockedToast': 'Достижение получено: {title}',
+  'achievements.firstWorkout.title': 'Первая тренировка',
+  'achievements.firstWorkout.description': 'Завершите первую тренировку',
+  'achievements.workouts5.title': 'Разгон',
+  'achievements.workouts5.description': 'Завершите 5 тренировок',
+  'achievements.workouts10.title': 'Регулярность',
+  'achievements.workouts10.description': 'Завершите 10 тренировок',
+  'achievements.firstTemplate.title': 'Планировщик',
+  'achievements.firstTemplate.description': 'Создайте первый шаблон тренировки',
+  'achievements.firstWeight.title': 'На весах',
+  'achievements.firstWeight.description': 'Запишите вес впервые',
+  'achievements.streak3.title': 'Серия 3 дня',
+  'achievements.streak3.description': 'Тренируйтесь в 3 разных дня',
   'profile.historyEmpty': 'Обновите вес в профиле, чтобы начать отслеживание.',
   'profile.weightChart': 'Динамика веса',
   'profile.historyList': 'Записи',

@@ -6,6 +6,7 @@ import type {
   WorkoutType,
 } from '@/db'
 import { db } from '@/db'
+import { checkAchievements } from '@/lib/achievements'
 import { createId, exerciseKey, knownExerciseId, normalizeExerciseName } from '@/lib/workout-utils'
 import {
   mirrorKnownExerciseUpsert,
@@ -129,6 +130,8 @@ export async function saveTemplate(
   if (template.type === 'strength') {
     await registerExerciseNames(userId, template.exercises)
   }
+
+  void checkAchievements(userId, { notify: true })
 
   return template
 }

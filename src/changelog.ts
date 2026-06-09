@@ -8,6 +8,20 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '0.0.12',
+    date: '2026-06-09',
+    changes: {
+      ru: [
+        'Данные из Supabase подтягиваются при каждом открытии приложения, а не только при входе',
+        'Восстановление из облака устойчиво к ошибкам отдельных таблиц',
+      ],
+      en: [
+        'Supabase data restores on every app open, not only on sign-in',
+        'Cloud restore tolerates per-table fetch failures',
+      ],
+    },
+  },
+  {
     version: '0.0.11',
     date: '2026-06-09',
     changes: {
